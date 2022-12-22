@@ -29,7 +29,7 @@ Created 11/26/1995 Heikki Tuuri
 #include "fil0fil.h"
 #include "dyn0buf.h"
 #include "buf0buf.h"
-#include <vector>
+#include "SmallVector.h"
 
 /** Start a mini-transaction. */
 #define mtr_start(m)		(m)->start()
@@ -787,7 +787,7 @@ private:
 #endif /* UNIV_DEBUG */
 
   /** acquired dict_index_t::lock, fil_space_t::latch, buf_block_t */
-  std::vector<mtr_memo_slot_t> m_memo;
+  llvm::SmallVector<mtr_memo_slot_t, 16> m_memo;
 
   /** mini-transaction log */
   mtr_buf_t m_log;
