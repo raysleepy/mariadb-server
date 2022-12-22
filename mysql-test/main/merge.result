@@ -3929,3 +3929,30 @@ drop table tm, t;
 #
 # End of 10.8 tests
 #
+#
+# MDEV-28602 Wrong result with outer join, merged derived table and view
+#
+drop table if exists t1, t2;
+Warnings:
+Note	1051	Unknown table 'test.t1,test.t2'
+create table t1 (
+Election int(10) unsigned NOT NULL
+);
+insert into t1 (Election) values (1);
+create table t2 (
+VoteID int(10),
+ElectionID int(10),
+UserID int(10)
+);
+insert into t2 (ElectionID, UserID) values (2,  30), (3, 30);
+drop view if exists v1;
+Warnings:
+Note	4092	Unknown VIEW: 'test.v1'
+create view v1 as select * from t1
+left join ( select 'Y' AS Voted, ElectionID from t2 ) AS T 
+on T.ElectionID = t1.Election
+limit 9;
+select * from v1;
+Election	Voted	ElectionID
+1	NULL	NULL
+# End of 10.11 tests

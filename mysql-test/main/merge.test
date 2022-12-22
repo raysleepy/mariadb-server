@@ -2886,3 +2886,31 @@ drop table tm, t;
 --echo #
 --echo # End of 10.8 tests
 --echo #
+
+--echo #
+--echo # MDEV-28602 Wrong result with outer join, merged derived table and view
+--echo #
+
+drop table if exists t1, t2;
+create table t1 (
+  Election int(10) unsigned NOT NULL
+);
+
+insert into t1 (Election) values (1);
+ 
+create table t2 (
+  VoteID int(10),
+  ElectionID int(10),
+  UserID int(10)
+);
+
+insert into t2 (ElectionID, UserID) values (2,  30), (3, 30);
+#  INSERT INTO t2 (ElectionID, UserID) VALUES (1,  30);
+drop view if exists v1;
+create view v1 as select * from t1
+  left join ( select 'Y' AS Voted, ElectionID from t2 ) AS T 
+    on T.ElectionID = t1.Election
+limit 9;
+# limit X causes merge algorithm select as opposed to temp table
+select * from v1;
+--echo # End of 10.11 tests

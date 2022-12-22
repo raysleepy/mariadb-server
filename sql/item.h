@@ -193,6 +193,9 @@ void view_error_processor(THD *thd, void *data);
 typedef List<TABLE_LIST>* ignored_tables_list_t;
 bool ignored_list_includes_table(ignored_tables_list_t list, TABLE_LIST *tbl);
 
+void fix_null_field_items(List<Item> *items);
+
+
 /*
   Instances of Name_resolution_context store the information necessary for
   name resolution of Items and other context analysis of a query made in

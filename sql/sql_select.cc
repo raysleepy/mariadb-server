@@ -22135,6 +22135,7 @@ evaluate_null_complemented_join_record(JOIN *join, JOIN_TAB *join_tab)
     /* The outer row is complemented by nulls for each inner tables */
     restore_record(join_tab->table,s->default_values);  // Make empty record
     mark_as_null_row(join_tab->table);       // For group by without error
+    fix_null_field_items(join_tab->fields);
     select_cond= join_tab->select_cond;
     /* Check all attached conditions for inner table rows. */
     if (select_cond && !select_cond->val_int())
@@ -22390,6 +22391,7 @@ join_read_system(JOIN_TAB *tab)
 	return report_error(table, error);
       table->const_table= 1;
       mark_as_null_row(tab->table);
+      fix_null_field_items(tab->fields);
       empty_record(table);			// Make empty record
       return -1;
     }

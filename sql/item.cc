@@ -10950,3 +10950,30 @@ bool ignored_list_includes_table(ignored_tables_list_t list, TABLE_LIST *tbl)
   }
   return false;
 }
+
+/*
+ * compliment to mark_as_null_row(TABLE *table)
+ * need to mark join_tab->fields as null
+ * as they can be used to fill out null records in outer joins
+ */
+
+void fix_null_field_items(List<Item> *items)
+{
+  if (items)
+  {
+    List_iterator<Item> li(*items);
+    Item *sub_item;
+
+    while ((sub_item= li++))
+    {
+      sub_item->set_maybe_null();
+      sub_item->null_value= true;
+      if (sub_item->type() == Item::REF_ITEM)
+      {
+        Item *ref= *((Item_ref *)sub_item)->ref;
+        ref->set_maybe_null();
+        ref->null_value= true;
+      }
+    }
+  }
+}
