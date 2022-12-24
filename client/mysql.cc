@@ -1323,7 +1323,7 @@ int main(int argc,char *argv[])
 
   if (!status.batch)
   {
-    put_info("Welcome to the MariaDB monitor.  Commands end with ; or \\g.",
+    put_info("Welcome to the MODIFIED MariaDB monitor.  Commands end with ; or \\g.",
              INFO_INFO);
     my_snprintf((char*) glob_buffer.ptr(), glob_buffer.alloced_length(),
             "Your %s connection id is %lu\nServer version: %s\n",
